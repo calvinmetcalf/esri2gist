@@ -1,0 +1,18 @@
+{
+   "_id": "_design/geojson",
+   "spatial": {
+       "geometry": "function(doc){\n       if(doc.geometry){ emit(doc.geometry,doc)};\n            }"
+   },
+   "rewrites": [
+       {
+           "to": "/_spatial/_list/geojson/geometry",
+           "from": "/all",
+           "query": {
+               "bbox": "-180,-90,180,90"
+           }
+       }
+   ],
+   "lists": {
+       "geojson": "function(head, req) {\n    var row, out, sep = '\\n';\n    if (req.headers.Accept.indexOf('application/json')!=-1) {\n        start({\"headers\":{\"Content-Type\" : \"application/json\"}});\n    }    else {\n        start({\"headers\":{\"Content-Type\" : \"text/plain\"}});\n    }\n    if ('callback' in req.query) {\n        send(req.query['callback'] + \"(\");\n    }    send('{\"type\": \"FeatureCollection\", \"features\":[');\n    while (row = getRow()) {\n        out = {type: \"Feature\", geometry: row.value.geometry};\n\t\t\t\tdelete row.value.geometry;\n               out.properties= row.value\n        send(sep + JSON.stringify(out));        sep = ',\\n';\n    }\n    send(\"]}\");\n    if ('callback' in req.query) {\n        send(\")\");}};\n"
+   }
+}
