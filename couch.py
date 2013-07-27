@@ -4,6 +4,8 @@ from os import remove, rmdir
 from urllib2 import Request, urlopen
 
 design = """
+{
+   "_id":"_design/geojson",
    "spatial": {
        "geometry": "function(doc){\n       if(doc.geometry){ emit(doc.geometry,doc)};\n            }"
    },
@@ -42,7 +44,7 @@ def postToCouch(url,outFile):
     req.add_header('Content-Type', 'application/json')
     res = urlopen(req,data)
     arcpy.AddMessage(str(res.code))
-    req2 = Request(url+'//_design//geojson')
+    req2 = Request(url)
     req2.add_header('Content-Type', 'application/json')
     arcpy.AddMessage(str(urlopen(req2,design).code))
 
