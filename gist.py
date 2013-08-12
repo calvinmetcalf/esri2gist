@@ -48,6 +48,6 @@ def postGist(outFile,filename,login,description):
     resp = urlopen(req,dumps(data))
     r = loads(resp.read())
     url = 'https://gist.github.com'+r['url'][r['url'].rfind('/'):]
-    arcpy.Addmessage(url)
+    arcpy.AddMessage(url)
 
 doStuff(arcpy.GetParameterAsText(0),arcpy.GetParameterAsText(1),arcpy.GetParameterAsText(2),arcpy.GetParameterAsText(3))
